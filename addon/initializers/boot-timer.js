@@ -7,13 +7,13 @@ export function initialize(application) {
     parent && parent.apply(this, arguments);
 
     const logger = this.__container__.lookup('service:logger');
-    logger.set('boot.applicationReady', performance.now());
+    logger && logger.set('boot.applicationReady', performance.now());
   };
 
   Ember.Router.reopen({
     _logBootTime: on('didTransition', function() {
       const logger = getOwner(this).lookup('service:logger');
-      if (isEmpty(logger.get('boot.finish'))) {
+      if (logger && isEmpty(logger.get('boot.finish'))) {
         logger.set('boot.finish', performance.now());
         logger.bootCompleted();
       }
