@@ -6,10 +6,6 @@ const BootTimer = require('./lib/boot-timer');
 module.exports = {
   name: 'ember-cli-logger',
 
-  isDevelopingAddon() {
-    return true;
-  },
-
   included: function(app) {
     this.app = app;
 
