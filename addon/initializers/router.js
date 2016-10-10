@@ -4,10 +4,12 @@ const {on, getOwner} = Ember;
 export function initialize() {
   Ember.Router.reopen({
     _logWillTransition: on('willTransition', function() {
-      getOwner(this).lookup('service:logger').willTransition(...arguments);
+      const logger = getOwner(this).lookup('service:logger');
+      logger && logger.willTransition(...arguments);
     }),
     _logDidTransition: on('didTransition', function() {
-      getOwner(this).lookup('service:logger').didTransition(...arguments);
+      const logger = getOwner(this).lookup('service:logger');
+      logger && logger.didTransition(...arguments);
     }),
   });
 }
