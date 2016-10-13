@@ -35,6 +35,22 @@ Place to send events (for example: `https://example/reporter`).
 ### server
 Your identification to know where the event come from.
 
+## Build configuration
+This addon also modifies build pipeline to inject timer into index.html and polyfill. You can toggle these with flags in `ember-cli-build.js`.
+
+```
+new EmberApp(defaults, {
+  measureBootTime: false,
+  isPerformancePolyfillEnabled: true,
+});
+```
+
+### measureBootTime
+If disabled `index.html` file wont be affected in any way note that performance polyfill wont be also included.
+
+### isPerformancePolyfillEnabled
+If enabled [polyfill](https://polyfill.io/v2/polyfill.min.js?features=performance.now) for performance.now is included.
+
 ## Events
 Every event contains `tick` and `instance` property.
  - tick - used to number events one by one.

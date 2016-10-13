@@ -15,11 +15,18 @@ module.exports = {
 
     this._super.included.apply(this, arguments);
     this.isEnabled = this.app.options.measureBootTime || false;
+
+    const polyfill = this.app.options.isPerformancePolyfillEnabled;
+    this.isPerformancePolyfillEnabled = polyfill !== undefined ? polyfill : true;
   },
 
   postprocessTree: function (type, tree) {
+    if(!this.isEnabled) {
+      return tree;
+    }
+
     if (type === 'all') {
-      return new BootTimer(tree);
+      return new BootTimer(tree, this.isPerformancePolyfillEnabled);
     }
 
     return tree;
