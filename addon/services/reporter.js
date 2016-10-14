@@ -26,6 +26,14 @@ export default Ember.Service.extend({
     });
   },
 
+  reportCustom(severity, message, time) {
+    this.report('/log', {
+      severity,
+      message,
+      time,
+    });
+  },
+
   reportBoot(boot) {
     this.report('/boot', {
       start: boot.start,
