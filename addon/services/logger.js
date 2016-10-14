@@ -43,16 +43,21 @@ export default Ember.Service.extend({
   },
 
   logError(error) {
-    this.log('error', 'general', error.message, error.stack);
+    this._log('error', 'general', error.message, error.stack);
     this.get('reporter').reportError(error);
   },
 
   logTransition(transition) {
-    this.log('info', 'transition', transition.targetName, transition.get('delta'));
+    this._log('info', 'transition', transition.targetName, transition.get('delta'));
     this.get('reporter').reportTransition(transition);
   },
 
-  log(severity, type, ...args) {
+  log(severity, message, time) {
+    this._log(severity, 'custom', message, time);
+    this.get('reporter').reportCustom(...arguments);
+  },
+
+  _log(severity, type, ...args) {
     if (this.get('config.isConsoleEnabled')) {
       console.log(`[${severity.toUpperCase()}]`, `${type.capitalize()}:`, ...args);
     }
@@ -60,7 +65,7 @@ export default Ember.Service.extend({
 
   bootCompleted() {
     const {start, applicationReady, finish} = this.get('boot');
-    this.log('info', 'boot', start, applicationReady, finish);
+    this._log('info', 'boot', start, applicationReady, finish);
     this.get('reporter').reportBoot(this.get('boot'));
   },
 

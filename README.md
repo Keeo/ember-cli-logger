@@ -78,6 +78,27 @@ When `isErrorHookEnabled` errors are reported as well.
  - message - message of the error
  - stack - stack trace (although not very useful)
 
+## Logging of custom events
+You can log custom events via `logger` service: ```Logger.log(severity, message, time)```
+
+```js
+import Ember from 'ember';
+const {computed, inject: {service}, K} = Ember;
+
+Ember.Controller.extend({
+  logger: service(),
+
+  filteredModel: computed('model', {
+    get() {
+      const start = performance.now();
+      const filteredModel = model.filter(K);
+      this.get('logger').log('info', 'Delta time to filter model', performance.now() - start);
+      return filteredModel;
+    }
+  });
+});
+```
+
 ## Example of sql database
 Sql tables may look like this.
 ```sql
@@ -101,15 +122,25 @@ CREATE TABLE `error` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `transition` (
-  `tick` int(11) NOT NULL,
   `instance` int(11) NOT NULL,
+  `tick` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `time` float NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `params` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `log` (
+  `instance` int(11) NOT NULL,
+  `tick` int(11) NOT NULL,
+  `message` text NOT NULL,
+  `severity` varchar(255) NOT NULL,
+  `time` float NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 ALTER TABLE `boot` ADD PRIMARY KEY (`instance`);
 ALTER TABLE `error` ADD PRIMARY KEY (`tick`,`instance`);
 ALTER TABLE `transition` ADD PRIMARY KEY (`tick`,`instance`);
+ALTER TABLE `log` ADD PRIMARY KEY (`tick`,`instance`);
 ```
