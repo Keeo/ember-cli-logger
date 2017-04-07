@@ -47,7 +47,7 @@ export default Ember.Service.extend({
   report(url, data) {
     const config = this.get('config');
     const {isReportingEnabled, endpoint} = config.getProperties('isReportingEnabled', 'endpoint');
-    const {ajax, tick, instanceId} = this.getProperties('ajax', 'tick', 'instanceId');
+    const {tick, instanceId} = this.getProperties('tick', 'instanceId');
     this.incrementProperty('tick');
 
     data.tick = tick;
@@ -55,10 +55,14 @@ export default Ember.Service.extend({
 
     if (isReportingEnabled) {
       assert(`When isReportingEnabled is enabled endpoint must be present. Got: ${endpoint} instead.`, isPresent(endpoint));
-      ajax.post(endpoint + url, {data}).catch(e => {
+      this._post(endpoint + url, {data}).catch(e => {
         info('Reporter failed to dispatch message:', e);
       });
     }
+  },
+
+  _post(url, data) {
+    return this.get('ajax').post(url, data);
   },
 
   instanceId: computed(() => {
