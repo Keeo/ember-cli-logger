@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-logger",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Ember addon for logging user interaction, bootup time and ajax requests.",
   "directories": {
     "doc": "doc",
